@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:thebookest/screens/sidebar/components/userpage.dart';
 import 'package:thebookest/main.dart';
-import 'package:thebookest/userpages.dart';
 
-class NavigationDrawerWidget extends StatelessWidget {
+class SideBar extends StatelessWidget {
   final padding = EdgeInsets.symmetric(horizontal: 20);
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class NavigationDrawerWidget extends StatelessWidget {
 
     return Drawer(
       child: Material(
-        color: Color.fromRGBO(50, 75, 205, 1),
+        color: Color.fromRGBO(52, 174, 235, 1),
         child: ListView(
           children: <Widget>[
             buildHeader(

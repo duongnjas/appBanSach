@@ -1,23 +1,24 @@
-// ignore_for_file: sort_child_properties_last, prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: sort_child_properties_last, prefer_const_constructors, preferhomepagehome_const_literals_to_create_immutables
 import 'package:flutter/material.dart';
-import 'package:thebookest/homepage.dart';
+import 'package:thebookest/constants.dart';
+import 'package:thebookest/screens/home/home_screen.dart';
 
-
-void main() => runApp(const MyApp());
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  static const String _title = 'Book Store';
-
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: _title,
-      home: Scaffold(
-        appBar: AppBar(title: const Text(_title)),
-        body: const LoginPage(),
+      debugShowCheckedModeBanner: false,
+      title: 'Book Store',
+      theme: ThemeData(
+        textTheme: Theme.of(context).textTheme.apply(bodyColor: kTextColor),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
+      home: LoginPage(),
     );
   }
 }
@@ -37,7 +38,8 @@ class _LoginPage extends State<LoginPage> {
 
   void checkLogin() {
     var check = false;
-    if (nameController == "user" && passwordController == "123") check = true;
+    if (nameController.text == "user@gmail.com" &&
+        passwordController.text == "123") check = true;
     setState(() {
       validLogin = check;
     });
@@ -45,82 +47,86 @@ class _LoginPage extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-        onChanged: checkLogin,
-        child: ListView(
-          children: <Widget>[
-            Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(10),
-                child: const Text(
-                  'TheBookest',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 243, 65, 33),
-                      fontWeight: FontWeight.w500,
-                      fontSize: 30),
-                )),
-            Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(10),
-                child: const Text(
-                  'ĐĂNG NHẬP',
-                  style: TextStyle(fontSize: 20),
-                )),
-            Container(
-              padding: const EdgeInsets.all(10),
-              child: TextField(
-                controller: nameController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'User Name',
+    return Scaffold(
+        // or MaterialApp
+        body: Form(
+            onChanged: checkLogin,
+            child: ListView(
+              children: <Widget>[
+                Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(10),
+                    child: const Text(
+                      'TheBookest',
+                      style: TextStyle(
+                          color: Color.fromARGB(255, 243, 65, 33),
+                          fontWeight: FontWeight.w500,
+                          fontSize: 30),
+                    )),
+                Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(10),
+                    child: const Text(
+                      'ĐĂNG NHẬP',
+                      style: TextStyle(fontSize: 20),
+                    )),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: nameController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Email',
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(10),
-              child: TextField(
-                obscureText: true,
-                controller: passwordController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Password',
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  child: TextField(
+                    obscureText: true,
+                    controller: passwordController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Password',
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            // TextButton(
-            //   onPressed: () {
-            //     //forgot password screen
-            //   },
-            //   child: const Text(
-            //     'Forgot Password',
-            //   ),
-            // ),
-            Container(
-                height: 50,
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: ElevatedButton(
-                  child: const Text('Đăng nhập'),
-                  onPressed: validLogin
-                      ? () => Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => HomePage()))
-                      : null,
-                )),
-            // Row(
-            //   children: <Widget>[
-            //     const Text('Does not have account?'),
-            //     TextButton(
-            //       child: const Text(
-            //         'Sign in',
-            //         style: TextStyle(fontSize: 20),
-            //       ),
-            //       onPressed: () {
-            //         //signup screen
-            //       },
-            //     )
-            //   ],
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            // ),
-          ],
-        ));
+                // TextButton(
+                //   onPressed: () {
+                //     //forgot password screen
+                //   },
+                //   child: const Text(
+                //     'Forgot Password',
+                //   ),
+                // ),
+                Container(
+                    height: 50,
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    child: ElevatedButton(
+                      child: const Text('Đăng nhập'),
+                      onPressed: validLogin
+                          ? () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomeScreen()))
+                          : null,
+                    )),
+                // Row(
+                //   children: <Widget>[
+                //     const Text('Does not have account?'),
+                //     TextButton(
+                //       child: const Text(
+                //         'Sign in',
+                //         style: TextStyle(fontSize: 20),
+                //       ),
+                //       onPressed: () {
+                //         //signup screen
+                //       },
+                //     )
+                //   ],
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                // ),
+              ],
+            )));
   }
 }
