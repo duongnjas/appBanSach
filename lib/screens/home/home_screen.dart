@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:thebookest/constants.dart';
 import 'package:thebookest/screens/cart/cart.dart';
+import 'package:thebookest/screens/cart/provider/cart_provider.dart';
 import 'package:thebookest/screens/home/components/body.dart';
 import 'package:thebookest/screens/sidebar/sidebar.dart';
-
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -43,10 +44,14 @@ class HomeScreen extends StatelessWidget {
             // By default our  icon color is white
             color: kTextColor,
           ),
-          onPressed: () { Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => CartScreen()),
-          );},
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChangeNotifierProvider<CartProvider>(
+                      create: (_) => CartProvider(), child: CartScreen()),
+                ));
+          },
         ),
         SizedBox(width: kDefaultPaddin / 2)
       ],
