@@ -1,7 +1,9 @@
 // ignore_for_file: sort_child_properties_last, prefer_const_constructors, preferhomepagehome_const_literals_to_create_immutables
 import 'package:flutter/material.dart';
 import 'package:thebookest/constants.dart';
+import 'package:thebookest/screens/admin/admin_panel.dart';
 import 'package:thebookest/screens/home/home_screen.dart';
+import 'package:thebookest/screens/admin/edit.dart';
 
 void main() {
   runApp(MyApp());
@@ -38,8 +40,9 @@ class _LoginPage extends State<LoginPage> {
 
   void checkLogin() {
     var check = false;
-    if (nameController.text == "user@gmail.com" &&
-        passwordController.text == "123") check = true;
+    if (nameController.text == "123" && passwordController.text == "123") {
+      check = true;
+    }
     setState(() {
       validLogin = check;
     });
@@ -103,14 +106,13 @@ class _LoginPage extends State<LoginPage> {
                     height: 50,
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: ElevatedButton(
-                      child: const Text('Đăng nhập'),
-                      onPressed: validLogin
-                          ? () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomeScreen()))
-                          : null,
-                    )),
+                        child: const Text('Đăng nhập'),
+                        onPressed: validLogin
+                            ? () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomeScreen()))
+                            : () => null)),
                 // Row(
                 //   children: <Widget>[
                 //     const Text('Does not have account?'),

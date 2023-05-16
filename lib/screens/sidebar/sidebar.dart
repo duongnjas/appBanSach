@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:thebookest/screens/admin/admin_panel.dart';
 import 'package:thebookest/screens/sidebar/components/userpage.dart';
+import 'package:thebookest/screens/sidebar/components/update_profile_user.dart';
 import 'package:thebookest/main.dart';
 
 class SideBar extends StatelessWidget {
@@ -35,7 +37,7 @@ class SideBar extends StatelessWidget {
                   buildSearchField(),
                   const SizedBox(height: 24),
                   buildMenuItem(
-                    text: 'Tài khoản',
+                    text: 'Chỉnh sửa thông tin tài khoản',
                     icon: Icons.people,
                     onClicked: () => selectedItem(context, 0),
                   ),
@@ -46,12 +48,30 @@ class SideBar extends StatelessWidget {
                     onClicked: () => selectedItem(context, 1),
                   ),
                   const SizedBox(height: 16),
+                  buildMenuItem(
+                    text: 'Thiết lập tài khoản',
+                    icon: Icons.settings,
+                    onClicked: () => selectedItem(context, 2),
+                  ),
+                  const SizedBox(height: 16),
+                  buildMenuItem(
+                    text: 'Trung tâm trợ giúp',
+                    icon: Icons.help_center,
+                    onClicked: () => selectedItem(context, 3),
+                  ),
+                  const SizedBox(height: 16),
+                  buildMenuItem(
+                    text: 'Admin Panel',
+                    icon: Icons.help_center,
+                    onClicked: () => selectedItem(context, 4),
+                  ),
+                  const SizedBox(height: 16),
                   Divider(color: Colors.white70),
                   const SizedBox(height: 24),
                   buildMenuItem(
                     text: 'Đăng xuất',
                     icon: Icons.logout,
-                    onClicked: () => selectedItem(context, 2),
+                    onClicked: () => selectedItem(context, 5),
                   ),
                 ],
               ),
@@ -146,22 +166,15 @@ class SideBar extends StatelessWidget {
 
     switch (index) {
       case 0:
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => UpdateProfileScreen()));
+        break;
+      case 4:
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => UserPage(
-            name: 'Sarah Abs',
-            urlImage: "urlImage",
-          ),
+          builder: (context) => AdminPanelScreen(),
         ));
         break;
-      case 1:
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => UserPage(
-            name: 'Sarah Abs',
-            urlImage: "urlImage",
-          ),
-        ));
-        break;
-      case 2:
+      case 5:
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => LoginPage(),
         ));

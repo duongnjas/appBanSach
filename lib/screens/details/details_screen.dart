@@ -2,22 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:thebookest/constants.dart';
 import 'package:thebookest/models/Product.dart';
+import 'package:thebookest/screens/cart/provider/cart_provider.dart';
 import 'package:thebookest/screens/details/components/body.dart';
+import 'package:provider/provider.dart';
 
 class DetailsScreen extends StatelessWidget {
   final Product product;
 
-  const DetailsScreen({Key ?key,required this.product}) : super(key: key);
+  const DetailsScreen({Key? key, required this.product}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // each product have a color
-      backgroundColor: product.color,
-      appBar: buildAppBar(context),
-      body: Body(product: product),
-    );
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => CartProvider()),
+        ],
+        child: Scaffold(
+          // each product have a color
+          backgroundColor: product.color,
+          appBar: buildAppBar(context),
+          body: Body(product: product),
+        ));
   }
-
 
   AppBar buildAppBar(BuildContext context) {
     return AppBar(

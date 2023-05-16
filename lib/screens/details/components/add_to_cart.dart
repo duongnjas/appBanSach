@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:thebookest/models/Product.dart';
 import 'package:thebookest/models/CartItem.dart';
-
+import 'package:thebookest/screens/cart/provider/cart_provider.dart';
+import 'package:provider/provider.dart';
 import '../../../constants.dart';
 
 class AddToCart extends StatelessWidget {
   const AddToCart({
     Key? key,
     required this.product,
+    required this.cartProvider,
   }) : super(key: key);
 
   final Product product;
+  final CartProvider cartProvider;
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +32,22 @@ class AddToCart extends StatelessWidget {
                 color: product.color,
               ),
             ),
-            child: IconButton(
-              icon: SvgPicture.asset(
-                "assets/icons/add_to_cart.svg",
-                color: product.color,
+            child: Consumer<CartProvider>(
+              builder: (context, cartProvider, child) => IconButton(
+                icon: SvgPicture.asset(
+                  "assets/icons/add_to_cart.svg",
+                  color: product.color,
+                ),
+                onPressed: () {
+                  cartProvider.addItem(
+                    CartItem(
+                      product: product.title,
+                      price: product.price,
+                      quantity: 1,
+                    ),
+                  );
+                },
               ),
-              onPressed: () {},
             ),
           ),
           Expanded(
