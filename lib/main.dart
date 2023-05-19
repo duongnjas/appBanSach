@@ -6,7 +6,9 @@ import 'package:thebookest/screens/home/home_screen.dart';
 import 'package:thebookest/screens/admin/edit.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MyApp(
+    
+  ));
 }
 
 class MyApp extends StatelessWidget {

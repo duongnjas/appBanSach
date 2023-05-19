@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 class Product {
   final String image, title, description;
   final int price, id;
+  int quantity;
   final Color color;
   Product({
     required this.id,
+    required this.quantity,
     required this.image,
     required this.title,
     required this.price,
@@ -17,14 +19,18 @@ class Product {
 List<Product> products = [
   Product(
       id: 1,
+      quantity: 1,
       title: "Chú Thuật Hồi Chiến - Tập 6",
       price: 27100,
       description:
           "Phía Kyoto lợi dụng cơ hội giao lưu để trừ khử Itadori. Trong lúc đó, chú nguyền sư và chú linh do Mahito cầm đầu đã đột nhập vào khu vực diễn ra buổi giao lưu. Nhóm giáo viên định tới ứng cứu học sinh nhưng lại bị “màn” của phe địch cản bướ!? Bị chú linh đặc cấp Hanami tấn công, liệu Fushiguro và Inumaki có thoát khỏi vòng nguy hiểm!",
-      image: "assets/images/1.jpg",
+      // image: "assets/images/1.jpg",
+      image:
+          "https://cdn0.fahasa.com/media/catalog/product/c/h/chu_thuat_hoi_chien_-_tap_6_-_obi.jpg",
       color: Color(0xFF3D82AE)),
   Product(
       id: 2,
+      quantity: 1,
       title: "Blue Period - Tập 01",
       price: 23000,
       description:
@@ -33,6 +39,7 @@ List<Product> products = [
       color: Color(0xFFD3A984)),
   Product(
       id: 3,
+      quantity: 1,
       title: "Toàn Thư Chiêm Tinh Học Nhập Môn",
       price: 52000,
       description:
@@ -41,6 +48,7 @@ List<Product> products = [
       color: Color(0xFF989493)),
   Product(
       id: 4,
+      quantity: 1,
       title: "Yêu nhưng không hoàn hảo",
       price: 45000,
       description:
@@ -49,6 +57,7 @@ List<Product> products = [
       color: Color(0xFFE6B398)),
   Product(
       id: 5,
+      quantity: 1,
       title: "Thao Túng Tâm Lý",
       price: 200000,
       description:
@@ -57,6 +66,7 @@ List<Product> products = [
       color: Color(0xFFFB7883)),
   Product(
     id: 6,
+    quantity: 1,
     title: "Điềm tĩnh và nóng giận",
     price: 150000,
     description:
@@ -65,6 +75,3 @@ List<Product> products = [
     color: Color(0xFFAEAEAE),
   ),
 ];
-
-String dummyText =
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since. When an unknown printer took a galley.";

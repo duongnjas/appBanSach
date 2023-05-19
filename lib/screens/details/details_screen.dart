@@ -5,6 +5,7 @@ import 'package:thebookest/models/Product.dart';
 import 'package:thebookest/screens/cart/provider/cart_provider.dart';
 import 'package:thebookest/screens/details/components/body.dart';
 import 'package:provider/provider.dart';
+import 'package:thebookest/screens/cart/cart.dart';
 
 class DetailsScreen extends StatelessWidget {
   final Product product;
@@ -14,7 +15,7 @@ class DetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => CartProvider()),
+          ChangeNotifierProvider.value(value: CartProvider()),
         ],
         child: Scaffold(
           // each product have a color
@@ -36,15 +37,20 @@ class DetailsScreen extends StatelessWidget {
         onPressed: () => Navigator.pop(context),
       ),
       actions: <Widget>[
-        IconButton(
-          icon: SvgPicture.asset("assets/icons/search.svg"),
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: SvgPicture.asset("assets/icons/cart.svg"),
-          onPressed: () {},
-        ),
-        SizedBox(width: kDefaultPaddin / 2)
+        // IconButton(
+        //   icon: SvgPicture.asset("assets/icons/search.svg"),
+        //   onPressed: () {},
+        // ),
+        // IconButton(
+        //   icon: SvgPicture.asset("assets/icons/cart.svg"),
+        //   onPressed: () {
+        //     Navigator.push(
+        //       context,
+        //       MaterialPageRoute(builder: (context) => CartScreen()),
+        //     );
+        //   },
+        // ),
+        const SizedBox(width: kDefaultPaddin / 2)
       ],
     );
   }
