@@ -3,8 +3,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:thebookest/screens/cart/order_success.dart';
 import 'package:thebookest/screens/sidebar/components/address.dart';
+import 'package:thebookest/models/Product.dart';
 
 class SelectAddressScreen extends StatefulWidget {
+  const SelectAddressScreen({
+    Key? key,
+    required this.product,
+  }) : super(key: key);
+
+  final Product product;
   @override
   _SelectAddressScreenState createState() => _SelectAddressScreenState();
 }
@@ -15,11 +22,13 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
       FirebaseFirestore.instance.collection('addresses');
 
   String? _selectedAddress;
+  bool _isAddressSelected = false;
 
   Future<void> _selectAddressForShipping(
       String address, String phoneNumber) async {
     setState(() {
       _selectedAddress = address;
+      _isAddressSelected = true;
     });
   }
 
@@ -125,6 +134,38 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
                 },
               ),
             ),
+            if (_isAddressSelected)
+              Column(
+                children: [
+                  SizedBox(height: 16.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Tiền sách'),
+                      Text('${widget.product.price}đ'),
+                    ],
+                  ),
+                  SizedBox(height: 8.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                          'Tiền ship'), // Replace with your value for "Tiền sách"
+                      Text('20000đ'), // Replace with your value for "Tiền ship"
+                    ],
+                  ),
+                  SizedBox(height: 8.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Tổng cộng'),
+                      Text(
+                          '${widget.product.price + 20000}đ'), // Replace with your value for "Tổng cộng"
+                    ],
+                  ),
+                ],
+              ),
+            SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
                 // Use the selected address for shipping

@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:thebookest/screens/cart/provider/cart_provider.dart';
 import 'package:thebookest/screens/cart/order_success.dart';
 import 'package:thebookest/models/CartItem.dart';
-import 'package:thebookest/screens/cart/payment.dart';
 import 'package:thebookest/models/Product.dart';
+import 'package:thebookest/screens/home/select_address_screen.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({
@@ -102,7 +102,7 @@ class CartScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                CheckoutScreen(product: product)),
+                                SelectAddressScreen(product: product)),
                       );
                     },
                     child: Text(
