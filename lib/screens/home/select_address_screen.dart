@@ -12,6 +12,7 @@ class SelectAddressScreen extends StatefulWidget {
   }) : super(key: key);
 
   final Product product;
+
   @override
   _SelectAddressScreenState createState() => _SelectAddressScreenState();
 }
@@ -23,6 +24,7 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
 
   String? _selectedAddress;
   bool _isAddressSelected = false;
+  String? _selectedPaymentMethod;
 
   Future<void> _selectAddressForShipping(
       String address, String phoneNumber) async {
@@ -48,6 +50,12 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
       );
       print('Error deleting address: $e');
     }
+  }
+
+  void _selectPaymentMethod(String paymentMethod) {
+    setState(() {
+      _selectedPaymentMethod = paymentMethod;
+    });
   }
 
   @override
@@ -149,9 +157,8 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                          'Tiền ship'), // Replace with your value for "Tiền sách"
-                      Text('20000đ'), // Replace with your value for "Tiền ship"
+                      Text('Tiền ship'),
+                      Text('20000đ'),
                     ],
                   ),
                   SizedBox(height: 8.0),
@@ -166,16 +173,47 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
                 ],
               ),
             SizedBox(height: 16.0),
+            Text(
+              'Chọn phương thức thanh toán',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 8.0),
+            ListTile(
+              title: const Text('Thanh toán khi nhận hàng'),
+              leading: Radio<String>(
+                value: 'cod',
+                groupValue: _selectedPaymentMethod,
+                onChanged: (value) {
+                  _selectPaymentMethod(value!);
+                },
+              ),
+            ),
+            ListTile(
+              title:
+                  const Text('Thanh toán qua thẻ tín dụng (Đang phát triển)'),
+              leading: Radio<String>(
+                value: 'credit_card',
+                groupValue: _selectedPaymentMethod,
+                onChanged: (value) {
+                  _selectPaymentMethod(value!);
+                },
+              ),
+            ),
+            SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                // Use the selected address for shipping
-                if (_selectedAddress != null) {
+                if (_selectedAddress != null &&
+                    _selectedPaymentMethod != null) {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => OrderSuccessScreen()));
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Vui lòng chọn một địa chỉ để giao hàng'),
+                      content: Text(
+                          'Vui lòng chọn một địa chỉ và phương thức thanh toán'),
                     ),
                   );
                 }

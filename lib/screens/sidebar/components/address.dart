@@ -67,21 +67,19 @@ class _AddressScreenState extends State<AddressScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextField(
+            TextFormField(
               controller: _addressController,
               decoration: InputDecoration(
                 labelText: 'Địa chỉ',
                 border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.location_on),
               ),
             ),
             SizedBox(height: 16.0),
-            TextField(
+            TextFormField(
               controller: _phoneNumberController,
               decoration: InputDecoration(
                 labelText: 'Số điện thoại',
                 border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.phone),
               ),
             ),
             SizedBox(height: 16.0),
