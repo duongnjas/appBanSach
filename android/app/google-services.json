@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "488424885270",
+    "project_id": "book-store-app-9615f",
+    "storage_bucket": "book-store-app-9615f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:488424885270:android:e8305bcb74ba322ec1b937",
+        "android_client_info": {
+          "package_name": "com.example.thebookest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "488424885270-3f2544q96486sjqafvob42ro9f80qvrq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtwIRkQunvf8pmUrd3U1ELJBp67cuHGw8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "488424885270-3f2544q96486sjqafvob42ro9f80qvrq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

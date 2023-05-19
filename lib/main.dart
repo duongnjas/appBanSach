@@ -1,11 +1,18 @@
 // ignore_for_file: sort_child_properties_last, prefer_const_constructors, preferhomepagehome_const_literals_to_create_immutables
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:thebookest/constants.dart';
 import 'package:thebookest/screens/admin/admin_panel.dart';
+import 'package:thebookest/screens/home/forget_password_screen.dart';
 import 'package:thebookest/screens/home/home_screen.dart';
 import 'package:thebookest/screens/admin/edit.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:thebookest/screens/home/signup_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -33,19 +40,49 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPage extends State<LoginPage> {
-  var nameController = TextEditingController();
-  var passwordController = TextEditingController();
+  final nameController = TextEditingController();
+  final passwordController = TextEditingController();
 
-  var validLogin = true;
+  bool validLogin = true;
 
-  void checkLogin() {
-    var check = false;
-    if (nameController.text == "123" && passwordController.text == "123") {
-      check = true;
+  Future<void> checkLogin() async {
+    final email = nameController.text;
+    final password = passwordController.text;
+
+    try {
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        setState(() {
+          validLogin = true;
+        });
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      } else {
+        setState(() {
+          validLogin = false;
+        });
+        Fluttertoast.showToast(
+          msg: 'Incorrect email or password',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+      }
+    } catch (e) {
+      setState(() {
+        validLogin = false;
+      });
+      print('Error logging in: $e');
     }
-    setState(() {
-      validLogin = check;
-    });
   }
 
   @override
@@ -53,7 +90,7 @@ class _LoginPage extends State<LoginPage> {
     return Scaffold(
         // or MaterialApp
         body: Form(
-            onChanged: checkLogin,
+            onChanged: () => checkLogin(),
             child: ListView(
               children: <Widget>[
                 Container(
@@ -94,40 +131,41 @@ class _LoginPage extends State<LoginPage> {
                     ),
                   ),
                 ),
-                // TextButton(
-                //   onPressed: () {
-                //     //forgot password screen
-                //   },
-                //   child: const Text(
-                //     'Forgot Password',
-                //   ),
-                // ),
                 Container(
-                    height: 50,
-                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    child: ElevatedButton(
-                        child: const Text('Đăng nhập'),
-                        onPressed: validLogin
-                            ? () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomeScreen()))
-                            : () => null)),
-                // Row(
-                //   children: <Widget>[
-                //     const Text('Does not have account?'),
-                //     TextButton(
-                //       child: const Text(
-                //         'Sign in',
-                //         style: TextStyle(fontSize: 20),
-                //       ),
-                //       onPressed: () {
-                //         //signup screen
-                //       },
-                //     )
-                //   ],
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                // ),
+                  height: 50,
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: ElevatedButton(
+                    child: const Text('Đăng nhập'),
+                    onPressed: validLogin ? () => checkLogin() : null,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ResetPasswordScreen(),
+                    ));
+                  },
+                  child: const Text(
+                    'Quên mật khẩu',
+                  ),
+                ),
+                Row(
+                  children: <Widget>[
+                    const Text('Chưa có tài khoản?'),
+                    TextButton(
+                      child: const Text(
+                        'Đăng ký ngay',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => SignUpScreen(),
+                        ));
+                      },
+                    )
+                  ],
+                  mainAxisAlignment: MainAxisAlignment.center,
+                ),
               ],
             )));
   }

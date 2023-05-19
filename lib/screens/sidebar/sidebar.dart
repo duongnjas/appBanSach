@@ -1,15 +1,36 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:thebookest/screens/admin/admin_panel.dart';
+import 'package:thebookest/screens/sidebar/components/address.dart';
 import 'package:thebookest/screens/sidebar/components/userpage.dart';
 import 'package:thebookest/screens/sidebar/components/update_profile_user.dart';
 import 'package:thebookest/main.dart';
 
 class SideBar extends StatelessWidget {
   final padding = EdgeInsets.symmetric(horizontal: 20);
+  String getCurrentUserEmail() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String email = user.email ?? '';
+      return email;
+    }
+    return '';
+  }
+
+  void _signOut(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => LoginPage()));
+    } catch (e) {
+      print('Sign Out Error: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final name = 'User';
-    final email = 'user@gmail.com';
+    final email = getCurrentUserEmail();
     final urlImage =
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZo14vNKzZfLHqh0li9g-NSXlxNQ9nP05vUg';
 
@@ -52,6 +73,12 @@ class SideBar extends StatelessWidget {
                     text: 'Thiết lập tài khoản',
                     icon: Icons.settings,
                     onClicked: () => selectedItem(context, 2),
+                  ),
+                  const SizedBox(height: 16),
+                  buildMenuItem(
+                    text: 'Thêm địa chỉ',
+                    icon: Icons.home,
+                    onClicked: () => selectedItem(context, 6),
                   ),
                   const SizedBox(height: 16),
                   buildMenuItem(
@@ -175,9 +202,11 @@ class SideBar extends StatelessWidget {
         ));
         break;
       case 5:
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => LoginPage(),
-        ));
+        _signOut(context);
+        break;
+      case 6:
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => AddressScreen()));
         break;
     }
   }

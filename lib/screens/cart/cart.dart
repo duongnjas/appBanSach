@@ -3,12 +3,20 @@ import 'package:provider/provider.dart';
 import 'package:thebookest/screens/cart/provider/cart_provider.dart';
 import 'package:thebookest/screens/cart/order_success.dart';
 import 'package:thebookest/models/CartItem.dart';
+import 'package:thebookest/screens/cart/payment.dart';
+import 'package:thebookest/models/Product.dart';
 
 class CartScreen extends StatelessWidget {
+  const CartScreen({
+    Key? key,
+    required this.product,
+  }) : super(key: key);
+  final Product product;
+
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => CartProvider(),
+    return ChangeNotifierProvider.value(
+      value: CartProvider(),
       child: Scaffold(
         appBar: AppBar(
           title: Text(
@@ -23,7 +31,7 @@ class CartScreen extends StatelessWidget {
         ),
         body: Consumer<CartProvider>(
           builder: (context, cartItem, child) {
-            if (cartItem.checkCart == 0) {
+            if (product.id == 0) {
               return Center(
                 child: Text(
                   'Giỏ hàng trống',
@@ -33,42 +41,35 @@ class CartScreen extends StatelessWidget {
                 ),
               );
             }
-
             return Column(
               children: [
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: cartItem.cartItems.length,
-                    itemBuilder: (context, index) {
-                      final item = cartItem.cartItems[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            child: Text(item.quantity.toString()),
-                            backgroundColor: Colors.green[700],
-                            foregroundColor: Colors.white,
-                          ),
-                          title: Text(
-                            item.product,
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          subtitle: Text(
-                            '${item.price}đ',
-                            style: TextStyle(
-                              fontSize: 16.0,
-                            ),
-                          ),
-                          trailing: IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () => cartItem.removeItem(item),
-                          ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        child: Text(product!.quantity.toString()),
+                        backgroundColor: Colors.green[700],
+                        foregroundColor: Colors.white,
+                      ),
+                      title: Text(
+                        product!.title,
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
                         ),
-                      );
-                    },
+                      ),
+                      subtitle: Text(
+                        '${product.price}đ',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () => {},
+                      ),
+                    ),
                   ),
                 ),
                 Container(
@@ -84,7 +85,7 @@ class CartScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '${cartItem.totalPrice}đ',
+                        '${product!.price}đ',
                         style: TextStyle(
                           fontSize: 20.0,
                           fontWeight: FontWeight.bold,
@@ -100,11 +101,12 @@ class CartScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => OrderSuccessScreen()),
+                            builder: (context) =>
+                                CheckoutScreen(product: product)),
                       );
                     },
                     child: Text(
-                      'Đặt hàng',
+                      'Xác Nhận',
                       style: TextStyle(
                         fontSize: 18.0,
                       ),
