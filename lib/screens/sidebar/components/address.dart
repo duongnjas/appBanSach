@@ -14,6 +14,15 @@ class _AddressScreenState extends State<AddressScreen> {
   final CollectionReference _addressCollection =
       FirebaseFirestore.instance.collection('addresses');
 
+  String? _selectedAddressId;
+
+  @override
+  void dispose() {
+    _addressController.dispose();
+    _phoneNumberController.dispose();
+    super.dispose();
+  }
+
   Future<void> addAddress(String address, String phoneNumber) async {
     try {
       await _addressCollection.add({
@@ -38,6 +47,30 @@ class _AddressScreenState extends State<AddressScreen> {
     }
   }
 
+  Future<void> updateAddress(
+      String addressId, String address, String phoneNumber) async {
+    try {
+      await _addressCollection.doc(addressId).update({
+        'address': address,
+        'phoneNumber': phoneNumber,
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Cập nhật địa chỉ thành công!'),
+        ),
+      );
+      _addressController.clear();
+      _phoneNumberController.clear();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Cập nhật địa chỉ thất bại!'),
+        ),
+      );
+      print('Error updating address: $e');
+    }
+  }
+
   Future<void> deleteAddress(String addressId) async {
     try {
       await _addressCollection.doc(addressId).delete();
@@ -56,39 +89,62 @@ class _AddressScreenState extends State<AddressScreen> {
     }
   }
 
+  void _editAddress(String addressId, String address, String phoneNumber) {
+    _addressController.text = address;
+    _phoneNumberController.text = phoneNumber;
+    setState(() {
+      _selectedAddressId = addressId;
+    });
+  }
+
+  void _cancelEdit() {
+    _addressController.clear();
+    _phoneNumberController.clear();
+    setState(() {
+      _selectedAddressId = null;
+    });
+  }
+
+  bool _isEditingAddress(String addressId) {
+    return _selectedAddressId == addressId;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Đia chỉ của tôi'),
+        title: Text('Địa chỉ của tôi'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextFormField(
+            TextField(
               controller: _addressController,
               decoration: InputDecoration(
                 labelText: 'Địa chỉ',
                 border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.location_on),
               ),
             ),
             SizedBox(height: 16.0),
-            TextFormField(
+            TextField(
               controller: _phoneNumberController,
               decoration: InputDecoration(
                 labelText: 'Số điện thoại',
                 border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.phone),
               ),
             ),
             SizedBox(height: 16.0),
             ElevatedButton(
-              onPressed: () => addAddress(
-                _addressController.text,
-                _phoneNumberController.text,
-              ),
-              child: Text('Thêm địa chỉ'),
+              onPressed: _selectedAddressId != null
+                  ? _updateSelectedAddress
+                  : _addAddress,
+              child: Text(_selectedAddressId != null
+                  ? 'Cập nhật địa chỉ'
+                  : 'Thêm địa chỉ'),
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 16.0),
               ),
@@ -130,17 +186,58 @@ class _AddressScreenState extends State<AddressScreen> {
                         return Card(
                           elevation: 3.0,
                           child: ListTile(
-                            title: Text(
-                              addressText,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            subtitle: Text(phoneNumber),
-                            trailing: IconButton(
-                              icon: Icon(Icons.delete),
-                              onPressed: () => deleteAddress(addressId),
-                            ),
+                            title: _isEditingAddress(addressId)
+                                ? TextField(
+                                    controller: _addressController,
+                                    decoration: InputDecoration(
+                                      hintText: 'Địa chỉ',
+                                    ),
+                                  )
+                                : Text(
+                                    addressText,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                            subtitle: _isEditingAddress(addressId)
+                                ? TextField(
+                                    controller: _phoneNumberController,
+                                    decoration: InputDecoration(
+                                      hintText: 'Số điện thoại',
+                                    ),
+                                  )
+                                : Text(phoneNumber),
+                            trailing: _isEditingAddress(addressId)
+                                ? Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(Icons.check),
+                                        onPressed: () =>
+                                            _updateAddress(addressId),
+                                      ),
+                                      IconButton(
+                                        icon: Icon(Icons.cancel),
+                                        onPressed: _cancelEdit,
+                                      ),
+                                    ],
+                                  )
+                                : Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(Icons.edit),
+                                        onPressed: () => _editAddress(addressId,
+                                            addressText, phoneNumber),
+                                      ),
+                                      IconButton(
+                                        icon: Icon(Icons.delete),
+                                        onPressed: () =>
+                                            _showDeleteConfirmationDialog(
+                                                addressId),
+                                      ),
+                                    ],
+                                  ),
                           ),
                         );
                       },
@@ -163,6 +260,60 @@ class _AddressScreenState extends State<AddressScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  void _addAddress() {
+    addAddress(
+      _addressController.text,
+      _phoneNumberController.text,
+    );
+  }
+
+  void _updateAddress(String addressId) {
+    updateAddress(
+      addressId,
+      _addressController.text,
+      _phoneNumberController.text,
+    );
+    _cancelEdit();
+  }
+
+  void _updateSelectedAddress() {
+    _updateAddress(_selectedAddressId!);
+  }
+
+  Future<void> _showDeleteConfirmationDialog(String addressId) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Xóa địa chỉ?'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Bạn có chắc muốn xóa địa chỉ này?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Hủy'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Xóa'),
+              onPressed: () {
+                deleteAddress(addressId);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
